@@ -1,0 +1,111 @@
+==20511== Memcheck, a memory error detector
+==20511== Copyright (C) 2002-2012, and GNU GPL'd, by Julian Seward et al.
+==20511== Using Valgrind-3.8.1 and LibVEX; rerun with -h for copyright info
+==20511== Command: ./skynet/skynet config
+==20511== Parent PID: 19065
+==20511== 
+==20511== Syscall param rt_sigaction(act->sa_mask) points to uninitialised byte(s)
+==20511==    at 0x359F60F8FE: __libc_sigaction (sigaction.c:67)
+==20511==    by 0x4073FD: sigign (skynet_main.c:81)
+==20511==    by 0x407440: main (skynet_main.c:112)
+==20511==  Address 0x7ff0000a8 is on thread 1's stack
+==20511== 
+==20511== Syscall param rt_sigaction(act->sa_flags) points to uninitialised byte(s)
+==20511==    at 0x359F60F8FE: __libc_sigaction (sigaction.c:67)
+==20511==    by 0x4073FD: sigign (skynet_main.c:81)
+==20511==    by 0x407440: main (skynet_main.c:112)
+==20511==  Address 0x7ff000098 is on thread 1's stack
+==20511== 
+==20511== Thread 5:
+==20511== Syscall param write(buf) points to uninitialised byte(s)
+==20511==    at 0x359F60E7CD: ??? (syscall-template.S:82)
+==20511==    by 0x40B828: send_request (socket_server.c:1289)
+==20511==    by 0x40BF7C: socket_server_listen (socket_server.c:1474)
+==20511==    by 0xD8029BC: llisten (lua-socket.c:478)
+==20511==    by 0x4135C8: luaD_precall (ldo.c:365)
+==20511==    by 0x41EC5D: luaV_execute (lvm.c:1162)
+==20511==    by 0x4138DA: luaD_call (ldo.c:496)
+==20511==    by 0x410237: lua_pcallk (lapi.c:981)
+==20511==    by 0x42695E: luaB_xpcall (lbaselib.c:441)
+==20511==    by 0x4135C8: luaD_precall (ldo.c:365)
+==20511==    by 0x41EC5D: luaV_execute (lvm.c:1162)
+==20511==    by 0x41287A: luaD_rawrunprotected (ldo.c:142)
+==20511==  Address 0x8405048 is on thread 5's stack
+==20511== 
+==20511== Syscall param write(buf) points to uninitialised byte(s)
+==20511==    at 0x359F60E7CD: ??? (syscall-template.S:82)
+==20511==    by 0x40B828: send_request (socket_server.c:1289)
+==20511==    by 0x40BA31: socket_server_start (socket_server.c:1496)
+==20511==    by 0xD8027C4: lstart (lua-socket.c:585)
+==20511==    by 0x4135C8: luaD_precall (ldo.c:365)
+==20511==    by 0x41ED38: luaV_execute (lvm.c:1146)
+==20511==    by 0x4138DA: luaD_call (ldo.c:496)
+==20511==    by 0x410237: lua_pcallk (lapi.c:981)
+==20511==    by 0x42695E: luaB_xpcall (lbaselib.c:441)
+==20511==    by 0x4135C8: luaD_precall (ldo.c:365)
+==20511==    by 0x41EC5D: luaV_execute (lvm.c:1162)
+==20511==    by 0x41287A: luaD_rawrunprotected (ldo.c:142)
+==20511==  Address 0x840506c is on thread 5's stack
+==20511== 
+==20511== Thread 6:
+==20511== Syscall param write(buf) points to uninitialised byte(s)
+==20511==    at 0x359F60E7CD: ??? (syscall-template.S:82)
+==20511==    by 0x40B828: send_request (socket_server.c:1289)
+==20511==    by 0x40C0A9: socket_server_connect (socket_server.c:1326)
+==20511==    by 0xD802B3B: lconnect (lua-socket.c:450)
+==20511==    by 0x4135C8: luaD_precall (ldo.c:365)
+==20511==    by 0x41ED38: luaV_execute (lvm.c:1146)
+==20511==    by 0x4138DA: luaD_call (ldo.c:496)
+==20511==    by 0x410237: lua_pcallk (lapi.c:981)
+==20511==    by 0x42695E: luaB_xpcall (lbaselib.c:441)
+==20511==    by 0x4135C8: luaD_precall (ldo.c:365)
+==20511==    by 0x41EC5D: luaV_execute (lvm.c:1162)
+==20511==    by 0x41287A: luaD_rawrunprotected (ldo.c:142)
+==20511==  Address 0x8e06022 is on thread 6's stack
+==20511== 
+==20511== Thread 11:
+==20511== Invalid read of size 4
+==20511==    at 0x41B9A1: luaH_getint (ltable.c:504)
+==20511==    by 0x41BD47: luaH_get (ltable.c:573)
+==20511==    by 0x41F706: luaV_execute (lvm.c:855)
+==20511==    by 0x4138DA: luaD_call (ldo.c:496)
+==20511==    by 0x413910: luaD_callnoyield (ldo.c:506)
+==20511==    by 0x41287A: luaD_rawrunprotected (ldo.c:142)
+==20511==    by 0x4128FE: luaD_pcall (ldo.c:727)
+==20511==    by 0x410191: lua_pcallk (lapi.c:969)
+==20511==    by 0x426A3F: luaB_pcall (lbaselib.c:424)
+==20511==    by 0x4135C8: luaD_precall (ldo.c:365)
+==20511==    by 0x41ED38: luaV_execute (lvm.c:1146)
+==20511==    by 0x4138DA: luaD_call (ldo.c:496)
+==20511==  Address 0x290dc9d8 is not stack'd, malloc'd or (recently) free'd
+==20511== 
+==20511== 
+==20511== Process terminating with default action of signal 11 (SIGSEGV): dumping core
+==20511==  Access not within mapped region at address 0x290DC9D8
+==20511==    at 0x41B9A1: luaH_getint (ltable.c:504)
+==20511==    by 0x41BD47: luaH_get (ltable.c:573)
+==20511==    by 0x41F706: luaV_execute (lvm.c:855)
+==20511==    by 0x4138DA: luaD_call (ldo.c:496)
+==20511==    by 0x413910: luaD_callnoyield (ldo.c:506)
+==20511==    by 0x41287A: luaD_rawrunprotected (ldo.c:142)
+==20511==    by 0x4128FE: luaD_pcall (ldo.c:727)
+==20511==    by 0x410191: lua_pcallk (lapi.c:969)
+==20511==    by 0x426A3F: luaB_pcall (lbaselib.c:424)
+==20511==    by 0x4135C8: luaD_precall (ldo.c:365)
+==20511==    by 0x41ED38: luaV_execute (lvm.c:1146)
+==20511==    by 0x4138DA: luaD_call (ldo.c:496)
+==20511==  If you believe this happened as a result of a stack
+==20511==  overflow in your program's main thread (unlikely but
+==20511==  possible), you can try to increase the size of the
+==20511==  main thread stack using the --main-stacksize= flag.
+==20511==  The main thread stack size used in this run was 10485760.
+==20511== 
+==20511== HEAP SUMMARY:
+==20511==     in use at exit: 0 bytes in 0 blocks
+==20511==   total heap usage: 0 allocs, 0 frees, 0 bytes allocated
+==20511== 
+==20511== All heap blocks were freed -- no leaks are possible
+==20511== 
+==20511== For counts of detected and suppressed errors, rerun with: -v
+==20511== Use --track-origins=yes to see where uninitialised values come from
+==20511== ERROR SUMMARY: 16 errors from 6 contexts (suppressed: 36 from 9)
