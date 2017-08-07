@@ -1,22 +1,20 @@
 # open_poker_server
+
+
+
 开源棋牌服务器框架，使用skynet
 
 网络协议使用pbc版的protobuf
 
 数据库使用mongodb
 
-客户端代码地址: https://github.com/yuanfengyun/chess
-
-房卡类的麻将服务器地址：https://github.com/yuanfengyun/mj_server
-
-房卡类的麻将客户端地址：https://github.com/yuanfengyun/mj_client
-
+客户端代码地址: https://github.com/wfatestaynight/chess_server
 
 服务器编译步骤:
 
 1、下载源码
 
-    git clone https://github.com/yuanfengyun/chess_server.git
+    git clone https://github.com/wfatestaynight/chess_server.git
 
 2、初始化submodule
 
@@ -63,3 +61,8 @@
 6、运行
 
     . run.sh
+
+7、记录
+	git submodule add -f https://github.com/cloudwu/skynet.git skynet
+	git submodule add -f https://github.com/sean-lin/protoc-gen-lua.git 3rd/protoc-gen-lua
+	git submodule add -f https://github.com/cloudwu/pbc.git 3rd/pbc
