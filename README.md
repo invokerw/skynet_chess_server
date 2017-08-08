@@ -64,5 +64,7 @@
 
 7、记录
 	git submodule add -f https://github.com/cloudwu/skynet.git skynet
+
 	git submodule add -f https://github.com/sean-lin/protoc-gen-lua.git 3rd/protoc-gen-lua
+
 	git submodule add -f https://github.com/cloudwu/pbc.git 3rd/pbc

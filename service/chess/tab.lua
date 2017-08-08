@@ -27,7 +27,9 @@ function M:init(p1, p2)
 	self.red = p1
 	self.black = p2
 	self.status = "wait"
+	self.redrun = true
 	--加上棋盘数据
+	--十几的棋子是红方
 	self.chessboard = {
 		 {5, 4, 3, 2, 1, 2, 3, 4, 5},
 		 {0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -35,10 +37,10 @@ function M:init(p1, p2)
 		 {7, 0, 7, 0, 7, 0, 7, 0, 7},
 		 {0, 0, 0, 0, 0, 0, 0, 0, 0},
 		 {0, 0, 0, 0, 0, 0, 0, 0, 0},
-		 {7, 0, 7, 0, 7, 0, 7, 0, 7},
-		 {0, 6, 0, 0, 0, 0, 0, 6, 0},
+		 {17, 0, 17, 0, 17, 0, 17, 0, 17},
+		 {0, 16, 0, 0, 0, 0, 0, 16, 0},
 		 {0, 0, 0, 0, 0, 0, 0, 0, 0},
-		 {5, 4, 3, 2, 1, 2, 3, 4, 5}
+		 {15, 14, 13, 12, 11, 12, 13, 14, 15}
 	}
 	--print("self.chessboard:")
 	--print_chessboard(self.chessboard)
@@ -71,6 +73,8 @@ function M:move(info, msg)
 	--print_chessboard(self.chessboard)
 	skynet.send(self.red.agent, "lua", "send", "Table.MoveNotify", msg)
 	skynet.send(self.black.agent, "lua", "send", "Table.MoveNotify", msg)
+	
+	self.redrun = !self.redrun
 end
 
 return M
