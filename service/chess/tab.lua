@@ -17,7 +17,7 @@ local function print_chessboard(chessboard)
 	local s = ""
 	for i=1,90 do
 		s = s..chessboard[i].." "
-		if i%10 == 0 then
+		if i%9 == 0 then
 			print(s)
 			s = ""
 		end
@@ -93,41 +93,6 @@ function M:init(p1, p2)
 	skynet.send(p2.agent, "lua", "send", "Table.MatchResult", msg2)
 end
 
-function M:move(info, msg)
-	--解析数据进行移动
-	local chessman = self.chessboard[msg.move.srow][msg.move.scol]
-	local source = (msg.move.srow - 1) * 9 + msg.move.scol
-	local direc = (msg.move.drow - 1) * 9 + msg.move.dcol
-	--不该他走
-	if ((chessman & 16) and self.redrun == true) or ((chessman & 32)  and self.redrun == false) then
-		return
-	end
-	--不能移动到自己的棋子上
-	if ((self.chessboard[direc] & 16) and self.redrun == true) or ((self.chessboard[direc] & 32) and self.redrun == false) then
-		return
-	end
-	--首先可不可以这么走
-
-	--可以这么走发送消息
-	skynet.send(self.red.agent, "lua", "send", "Table.MoveNotify", msg)
-	skynet.send(self.black.agent, "lua", "send", "Table.MoveNotify", msg)
-	--是否赢了
-	if checkmate(self.chessboard, direc) then
-		print("is red:"..self.redrun..", Win")
-		
-	end
-	--是否将军
-	
-	--改变服务器棋盘 
-	self.chessboard[source] = 0
-	self.chessboard[direc] = chessman
-	print("self.chessboard:")
-	print_chessboard(self.chessboard)
-
-	
-	self.redrun = not self.redrun
-end
-
 --将军
 local function check(chessboard, source, direc, redrun)
 	if true then
@@ -149,4 +114,51 @@ local function canmove(chessboard, source, direc, redrun)
 	if  true then
 	end
 end
+
+function M:move(info, msg)
+	--解析数据进行移动
+	local source = (msg.move.srow - 1) * 9 + msg.move.scol
+	local direc = (msg.move.drow - 1) * 9 + msg.move.dcol
+	local chessman = self.chessboard[source]
+	print("self.chessboard:")
+	print_chessboard(self.chessboard)
+	print("source = "..source..",direc = "..direc)
+	--不该他走
+	if ((chessman & 16)==16 and self.redrun == false) or ((chessman & 32)== 32 and self.redrun == true) then
+		if (chessman & 16) and self.redrun == false then 
+			print("aaaa")
+		end
+		if (chessman & 32)  and self.redrun == true then
+			print("bbbb")
+		end
+		print("error: chessman & 16 = "..(chessman & 16).."  chessman & 32 = "..(chessman & 32))
+		--return
+	end
+	--不能移动到自己的棋子上
+	if ((self.chessboard[direc] & 16) == 16 and self.redrun == true) or ((self.chessboard[direc] & 32)== 32 and self.redrun == false) then
+		print("error: self.chessboard[direc]&16 ="..(self.chessboard[direc]&16).." (self.chessboard[direc]&32 =  "..(self.chessboard[direc] & 32))
+		--return
+	end
+	--首先可不可以这么走
+
+	--可以这么走发送消息
+	skynet.send(self.red.agent, "lua", "send", "Table.MoveNotify", msg)
+	skynet.send(self.black.agent, "lua", "send", "Table.MoveNotify", msg)
+	--是否赢了
+	if true == checkmate(self.chessboard, direc) then
+		print("is red:"..self.redrun..", Win")
+		
+	end
+	--是否将军
+	
+	--改变服务器棋盘 
+	self.chessboard[source] = 0
+	self.chessboard[direc] = chessman
+	print("self.chessboard:")
+	print_chessboard(self.chessboard)
+
+	
+	self.redrun = not self.redrun
+end
+
 return M
