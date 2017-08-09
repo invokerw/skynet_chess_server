@@ -15,9 +15,9 @@ end
 
 local function print_chessboard(chessboard)
 	local s = ""
-	for i=1,90 do
+	for i=1,#chessboard do
 		s = s..chessboard[i].." "
-		if i%9 == 0 then
+		if i%16 == 0 then
 			print(s)
 			s = ""
 		end
@@ -27,6 +27,8 @@ local horse     = {-19,-17,-11,-7, 7,11,17,19}
 local horse_leg = { -9, -9, -1, 1,-1, 1, 9, 9}
 local elephant     = {-20,-16,16,20}
 local elephant_leg = {-10, -8, 8,10}
+local scholar = {-10,-8,8,10}
+local king = {-9,-1,1,9}
 local in_palace = {
 	0,  0,  0,  1,  1,  1,  0,  0,  0,
 	0,  0,  0,  1,  1,  1,  0,  0,  0,
@@ -49,7 +51,146 @@ local chess_pieces = {
 	86,85,87,84,88,83,89,82,90,65,71,55,57,59,61,63,
 	5,4,6,3,7,2,8,1,9,20,26,28,30,32,34,36
 }
+--将军
+local function check(chessboard, source, direc, redrun)
+	if true then
+	end
+end
 
+--赢了
+local function checkmate(chessboard, direc)
+	if chessboard[direc] == 11 or chessboard[direc] == 1 then
+		return true
+	end
+	return false
+end
+
+--可以这么走吗
+local function canmove(chessboard, source, direc)
+	local chessman = chessboard[source]
+	--如果是车
+	if  chessman == 23 or chessman == 24 or chessman == 39 or chessman == 40 then
+		local big = source
+		local small = direc
+		if source < direc then
+			big = direc
+			small = source
+		end
+		--竖着走的
+		if (big - small)%9 ==0 then
+			for i=small,source,9 do
+				if chessboard[i] ~= 0 then
+					return false
+			end
+		else 
+			for i=small,source do
+				if chessboard[i] ~= 0 then
+					return false
+			end
+		end
+	--如果是炮
+	else if chessman == 21 or chessman == 22 or chessman == 37 or chessman == 38 then
+		local big = source
+		local small = direc
+		if source < direc then
+			big = direc
+			small = source
+		end
+		--是否是吃子 
+		local eat = false 
+		--竖着走的
+		if (big - small)%9 ==0 then
+			for i=small,source,9 do
+				if chessboard[i] ~= 0 then
+					eat = true
+			end
+		else 
+			for i=small,source do
+				if chessboard[i] ~= 0 then
+					eat = true
+			end
+		end
+
+		if eat == true then 
+			if chessboard[direc] == 0 then
+				return false
+			end
+		else
+			if chessboard[direc] ~= 0 then
+				retrun false
+			end
+		end
+	--如果是卒
+	else if chessman == 21 or chessman == 22 or chessman == 37 or chessman == 38 then
+		--没有过河
+
+		--如果过河了
+	--如果是马
+	else if chessman == 21 or chessman == 22 or chessman == 37 or chessman == 38 then
+		--找到他跳的位置
+		local x = 0
+		for i=1,#horse do
+			if source + horse[i] == direc then
+				x = i
+				break
+			end
+		end
+		if x == 0 then
+			return false
+		end
+		--是否绊了马腿
+		if chessboard[horse_leg[x]] ~= 0 then
+			return false
+		end
+	--如果是象
+	else if chessman == 19 or chessman == 20 or chessman == 35 or chessman == 36 then
+		--找到他跳的位置
+		local x = 0
+		for i=1,#elephant do
+			if source + elephant[i] == direc then
+				x = i
+				break
+			end
+		end
+		if x == 0 then
+			return false
+		end
+		--是否绊了象腿
+		if chessboard[elephant_leg[x]] ~= 0 then
+			return false
+		end
+	--如果是士
+	else if chessman == 17 or chessman == 18 or chessman == 33 or chessman == 34 then
+		if in_palace[source] == 0 or in_palace[direc] == 0 then
+			return false
+		end
+		local x = 0
+		for i=1,#scholar do
+			if source + scholar[i] == direc then
+				x = i
+				break
+			end
+		end
+		if x == 0 then
+			return false
+		end
+	--如果是将
+	else if chessman == 16 or chessman == 32 then
+		if in_palace[source] == 0 or in_palace[direc] == 0 then
+			return false
+		end
+		local x = 0
+		for i=1,#king do
+			if source + king[i] == direc then
+				x = i
+				break
+			end
+		end
+		if x == 0 then
+			return false
+		end
+	end
+end
 
 function M:init(p1, p2)
 	self.red = p1
@@ -58,18 +199,25 @@ function M:init(p1, p2)
 	self.redrun = true
 	--加上棋盘数据
 	--十几的棋子是红方
+	--棋盘的16*16会更加好的判定边界问题，行走问题
 	self.chessboard = {
-		39, 37, 35, 33, 32, 34, 36, 38, 40,
-		 0,  0,  0,  0,  0,  0,  0,  0,  0,
-		 0, 41,  0,  0,  0,  0,  0, 42,  0,
-		43,  0, 44,  0, 45,  0, 46,  0, 47,
-		 0,  0,  0,  0,  0,  0,  0,  0,  0,
-		--     楚河            汉界
-		 0,  0,  0,  0,  0,  0,  0,  0,  0,
-		27,  0, 28,  0, 29,  0, 30,  0, 31,
-		 0, 25,  0,  0,  0,  0,  0, 26,  0,
-		 0,  0,  0,  0,  0,  0,  0,  0,  0,
-		23, 21, 19, 17, 16, 18, 20, 22, 24
+		-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，
+		-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，
+		-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，
+		-1，-1，-1，39, 37, 35, 33, 32, 34, 36, 38, 40, -1，-1，-1，-1，
+		-1，-1，-1， 0,  0,  0,  0,  0,  0,  0,  0,  0, -1，-1，-1，-1，
+		-1，-1，-1， 0, 41,  0,  0,  0,  0,  0, 42,  0, -1，-1，-1，-1，
+		-1，-1，-1，43,  0, 44,  0, 45,  0, 46,  0, 47, -1，-1，-1，-1，
+		-1，-1，-1， 0,  0,  0,  0,  0,  0,  0,  0,  0, -1，-1，-1，-1，
+		--				     楚河            汉界
+		-1，-1，-1， 0,  0,  0,  0,  0,  0,  0,  0,  0, -1，-1，-1，-1，
+		-1，-1，-1，27,  0, 28,  0, 29,  0, 30,  0, 31, -1，-1，-1，-1，
+		-1，-1，-1， 0, 25,  0,  0,  0,  0,  0, 26,  0, -1，-1，-1，-1，
+		-1，-1，-1， 0,  0,  0,  0,  0,  0,  0,  0,  0, -1，-1，-1，-1，
+		-1，-1，-1，23, 21, 19, 17, 16, 18, 20, 22, 24，-1，-1，-1，-1，
+		-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，
+		-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，
+		-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，
 	}
 	--print("self.chessboard:")
 	--print_chessboard(self.chessboard)
@@ -93,36 +241,17 @@ function M:init(p1, p2)
 	skynet.send(p2.agent, "lua", "send", "Table.MatchResult", msg2)
 end
 
---将军
-local function check(chessboard, source, direc, redrun)
-	if true then
-	end
-end
-
---赢了
-local function checkmate(chessboard, direc)
-	if chessboard[direc] == 11 or chessboard[direc] == 1 then
-		return true
-	end
-	return false
-end
-
---可以这么走吗
-local function canmove(chessboard, source, direc, redrun)
-	local chessman = chessboard[source]
-	--如果是
-	if  true then
-	end
-end
-
 function M:move(info, msg)
 	--解析数据进行移动
-	local source = (msg.move.srow - 1) * 9 + msg.move.scol
-	local direc = (msg.move.drow - 1) * 9 + msg.move.dcol
+	local source = (msg.move.srow - 1) * 16 + msg.move.scol + 3
+	local direc = (msg.move.drow - 1) * 16 + msg.move.dcol + 3
 	local chessman = self.chessboard[source]
 	print("self.chessboard:")
 	print_chessboard(self.chessboard)
 	print("source = "..source..",direc = "..direc)
+	if source == direc then
+		return
+	end
 	--不该他走
 	if ((chessman & 16)==16 and self.redrun == false) or ((chessman & 32)== 32 and self.redrun == true) then
 		if (chessman & 16) and self.redrun == false then 
