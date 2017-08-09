@@ -30,23 +30,23 @@ local elephant_leg = {-17,-15, 15,17}
 local scholar = {-17,-15,15,17}
 local king = {-16,-1,1,16}
 local in_palace = {
-	-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，
-	-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，
-	-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，
-	-1，-1，-1， 0,  0,  0,  1,  1,  1,  0,  0,  0, -1，-1，-1，-1，
-	-1，-1，-1， 0,  0,  0,  1,  1,  1,  0,  0,  0, -1，-1，-1，-1，
-	-1，-1，-1， 0,  0,  0,  1,  1,  1,  0,  0,  0, -1，-1，-1，-1，
-	-1，-1，-1， 0,  0,  0,  0,  0,  0,  0,  0,  0, -1，-1，-1，-1，
-	-1，-1，-1， 0,  0,  0,  0,  0,  0,  0,  0,  0, -1，-1，-1，-1，
+	--1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，
+	--1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，
+	--1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，
+	--1，-1，-1， 0,  0,  0,  1,  1,  1,  0,  0,  0, -1，-1，-1，-1，
+	--1，-1，-1， 0,  0,  0,  1,  1,  1,  0,  0,  0, -1，-1，-1，-1，
+	--1，-1，-1， 0,  0,  0,  1,  1,  1,  0,  0,  0, -1，-1，-1，-1，
+	--1，-1，-1， 0,  0,  0,  0,  0,  0,  0,  0,  0, -1，-1，-1，-1，
+	--1，-1，-1， 0,  0,  0,  0,  0,  0,  0,  0,  0, -1，-1，-1，-1，
 				--     楚河            汉界
-	-1，-1，-1， 0,  0,  0,  0,  0,  0,  0,  0,  0, -1，-1，-1，-1，
-	-1，-1，-1， 0,  0,  0,  0,  0,  0,  0,  0,  0, -1，-1，-1，-1，
-	-1，-1，-1， 0,  0,  0,  1,  1,  1,  0,  0,  0, -1，-1，-1，-1，
-	-1，-1，-1， 0,  0,  0,  1,  1,  1,  0,  0,  0, -1，-1，-1，-1，
-	-1，-1，-1， 0,  0,  0,  1,  1,  1,  0,  0,  0,	-1，-1，-1，-1，
-	-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，
-	-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，
-	-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，
+	--1，-1，-1， 0,  0,  0,  0,  0,  0,  0,  0,  0, -1，-1，-1，-1，
+	--1，-1，-1， 0,  0,  0,  0,  0,  0,  0,  0,  0, -1，-1，-1，-1，
+	--1，-1，-1， 0,  0,  0,  1,  1,  1,  0,  0,  0, -1，-1，-1，-1，
+	--1，-1，-1， 0,  0,  0,  1,  1,  1,  0,  0,  0, -1，-1，-1，-1，
+	--1，-1，-1， 0,  0,  0,  1,  1,  1,  0,  0,  0,	-1，-1，-1，-1，
+	--1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，
+	--1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，
+	--1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1
 }
 --chess_pieces[48]这个扩展的棋子数组比较难以理解，实际上用了“屏蔽位”的设计，即1位表示红子(16)，1位表示黑子(32)。
 --因此0到15没有作用，16到31代表红方棋子(16代表帅，17和18代表仕，依此类推，直到27到31代表兵)，32到47代表黑方棋子(在红方基础上加16)。
@@ -83,19 +83,21 @@ local function canmove(chessboard, source, direc)
 			small = source
 		end
 		--竖着走的
-		if (big - small)%16 ==0 then
+		if (big - small)%16 == 0 then
 			for i=small,source,16 do
 				if chessboard[i] ~= 0 then
 					return false
+				end
 			end
 		else 
 			for i=small,source do
 				if chessboard[i] ~= 0 then
 					return false
+				end
 			end
 		end
 	--如果是炮
-	else if chessman == 21 or chessman == 22 or chessman == 37 or chessman == 38 then
+	elseif chessman == 21 or chessman == 22 or chessman == 37 or chessman == 38 then
 		local big = source
 		local small = direc
 		if source < direc then
@@ -109,11 +111,13 @@ local function canmove(chessboard, source, direc)
 			for i=small,source,9 do
 				if chessboard[i] ~= 0 then
 					eat = true
+				end
 			end
 		else 
 			for i=small,source do
 				if chessboard[i] ~= 0 then
 					eat = true
+				end
 			end
 		end
 
@@ -123,17 +127,17 @@ local function canmove(chessboard, source, direc)
 			end
 		else
 			if chessboard[direc] ~= 0 then
-				retrun false
+				return false
 			end
 		end
 	--如果是卒
-	else if (chessman >= 27 and chessman <= 31) or (chessman >= 43 and chessman <= 47) then
+	elseif (chessman >= 27 and chessman <= 31) or (chessman >= 43 and chessman <= 47) then
 		--红
 		if chessman >= 27 and chessman <= 31 then 
 			--没有过河
 			if source > 16 * 8 then
 				--不是向前走
-				if source - 16 ~= direc
+				if source - 16 ~= direc then
 					return false
 				end
 			--如果过河了
@@ -143,11 +147,11 @@ local function canmove(chessboard, source, direc)
 					return false
 				end
 			end
-		else if chessman >= 43 and chessman <= 47
+		elseif chessman >= 43 and chessman <= 47 then
 			--没有过河
 			if source <= 16 * 8 then
 				--不是向前走
-				if source + 16 ~= direc
+				if source + 16 ~= direc then
 					return false
 				end
 			else
@@ -156,9 +160,11 @@ local function canmove(chessboard, source, direc)
 					return false
 				end
 			end
+		else 
+			return false
 		end
 	--如果是马
-	else if chessman == 21 or chessman == 22 or chessman == 37 or chessman == 38 then
+	elseif chessman == 21 or chessman == 22 or chessman == 37 or chessman == 38 then
 		--找到他跳的位置
 		local x = 0
 		for i=1,#horse do
@@ -175,7 +181,7 @@ local function canmove(chessboard, source, direc)
 			return false
 		end
 	--如果是象
-	else if chessman == 19 or chessman == 20 or chessman == 35 or chessman == 36 then
+	elseif chessman == 19 or chessman == 20 or chessman == 35 or chessman == 36 then
 		--找到他跳的位置
 		local x = 0
 		for i=1,#elephant do
@@ -192,7 +198,7 @@ local function canmove(chessboard, source, direc)
 			return false
 		end
 	--如果是士
-	else if chessman == 17 or chessman == 18 or chessman == 33 or chessman == 34 then
+	elseif chessman == 17 or chessman == 18 or chessman == 33 or chessman == 34 then
 		if in_palace[source] == 0 or in_palace[direc] == 0 then
 			return false
 		end
@@ -207,7 +213,7 @@ local function canmove(chessboard, source, direc)
 			return false
 		end
 	--如果是将
-	else if chessman == 16 or chessman == 32 then
+	elseif chessman == 16 or chessman == 32 then
 		if in_palace[source] == 0 or in_palace[direc] == 0 then
 			return false
 		end
@@ -233,11 +239,11 @@ function M:init(p1, p2)
 	--加上棋盘数据
 	--十几的棋子是红方
 	--棋盘的16*16会更加好的判定边界问题，行走问题
-	self.chessboard = {
-		-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，
-		-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，
-		-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，
-		-1，-1，-1，39, 37, 35, 33, 32, 34, 36, 38, 40, -1，-1，-1，-1，
+	self.chessboard = { 
+		-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+		-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+		-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+		-1，-1，-1，39, 37, 35, 33, 32, 34, 36, 38, 40, -1，-1，-1，-1,
 		-1，-1，-1， 0,  0,  0,  0,  0,  0,  0,  0,  0, -1，-1，-1，-1，
 		-1，-1，-1， 0, 41,  0,  0,  0,  0,  0, 42,  0, -1，-1，-1，-1，
 		-1，-1，-1，43,  0, 44,  0, 45,  0, 46,  0, 47, -1，-1，-1，-1，
@@ -306,6 +312,7 @@ function M:move(info, msg)
 	end
 	--首先可不可以这么走
 	if true ~= canmove(self.chessboard, source, direc) then
+		print("can't move it")
 		return 
 	end
 	--可以这么走发送消息
