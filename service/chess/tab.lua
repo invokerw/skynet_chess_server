@@ -65,7 +65,7 @@ end
 
 --赢了
 local function checkmate(chessboard, direc)
-	if chessboard[direc] == 11 or chessboard[direc] == 1 then
+	if chessboard[direc] == 16 or chessboard[direc] == 32 then
 		return true
 	end
 	return false
@@ -84,20 +84,24 @@ local function canmove(chessboard, source, direc)
 		end
 		--竖着走的
 		if (big - small)%16 == 0 then
-			for i=small,source,16 do
-				if chessboard[i] ~= 0 then
-					return false
+			if big - small > 16 then 
+				for i=small+16,big-16,16 do
+					if chessboard[i] ~= 0 then
+						return false
+					end
 				end
 			end
 		else 
-			for i=small,source do
-				if chessboard[i] ~= 0 then
-					return false
+			if big - small > 1 then
+				for i=small+1,big-1 do
+					if chessboard[i] ~= 0 then
+						return false
+					end
 				end
 			end
 		end
 	--如果是炮
-	elseif chessman == 21 or chessman == 22 or chessman == 37 or chessman == 38 then
+	elseif chessman == 25 or chessman == 26 or chessman == 41 or chessman == 42 then
 		local big = source
 		local small = direc
 		if source < direc then
@@ -108,15 +112,19 @@ local function canmove(chessboard, source, direc)
 		local eat = false 
 		--竖着走的
 		if (big - small)%16 ==0 then
-			for i=small,source,9 do
-				if chessboard[i] ~= 0 then
-					eat = true
+			if big - small > 16 then
+				for i=small+16,big-16,16 do
+					if chessboard[i] ~= 0 then
+						eat = true
+					end
 				end
 			end
 		else 
-			for i=small,source do
-				if chessboard[i] ~= 0 then
-					eat = true
+			if big - small > 1 then 
+				for i=small+1,big-1 do
+					if chessboard[i] ~= 0 then
+						eat = true
+					end
 				end
 			end
 		end
@@ -177,7 +185,7 @@ local function canmove(chessboard, source, direc)
 			return false
 		end
 		--是否绊了马腿
-		if chessboard[horse_leg[x]] ~= 0 then
+		if chessboard[source + horse_leg[x]] ~= 0 then
 			return false
 		end
 	--如果是象
@@ -194,7 +202,7 @@ local function canmove(chessboard, source, direc)
 			return false
 		end
 		--是否绊了象腿
-		if chessboard[elephant_leg[x]] ~= 0 then
+		if chessboard[source + elephant_leg[x]] ~= 0 then
 			return false
 		end
 	--如果是士
@@ -282,8 +290,8 @@ end
 
 function M:move(info, msg)
 	--解析数据进行移动
-	local source = (msg.move.srow - 1) * 16 + msg.move.scol + 3
-	local direc = (msg.move.drow - 1) * 16 + msg.move.dcol + 3
+	local source = (msg.move.srow + 3 - 1) * 16 + msg.move.scol + 3
+	local direc = (msg.move.drow + 3 - 1) * 16 + msg.move.dcol + 3
 	local chessman = self.chessboard[source]
 	print("self.chessboard:")
 	print_chessboard(self.chessboard)
@@ -296,19 +304,13 @@ function M:move(info, msg)
 	end
 	--不该他走
 	if ((chessman & 16)==16 and self.redrun == false) or ((chessman & 32)== 32 and self.redrun == true) then
-		if (chessman & 16) and self.redrun == false then 
-			print("aaaa")
-		end
-		if (chessman & 32)  and self.redrun == true then
-			print("bbbb")
-		end
 		print("error: chessman & 16 = "..(chessman & 16).."  chessman & 32 = "..(chessman & 32))
-		--return
+		return
 	end
 	--不能移动到自己的棋子上
 	if ((self.chessboard[direc] & 16) == 16 and self.redrun == true) or ((self.chessboard[direc] & 32)== 32 and self.redrun == false) then
 		print("error: self.chessboard[direc]&16 ="..(self.chessboard[direc]&16).." (self.chessboard[direc]&32 =  "..(self.chessboard[direc] & 32))
-		--return
+		return
 	end
 	--首先可不可以这么走
 	if true ~= canmove(self.chessboard, source, direc) then
