@@ -52,7 +52,11 @@ local in_palace = {
 --因此0到15没有作用，16到31代表红方棋子(16代表帅，17和18代表仕，依此类推，直到27到31代表兵)，32到47代表黑方棋子(在红方基础上加16)。
 --棋盘数组中的每个元素的意义就明确了，0代表没有棋子，16到31代表红方棋子，32到47代表黑方棋子。
 --好处：它可以快速判断棋子的颜色，(Piece & 16)可以判断是否为红方棋子，(Piece & 32)可以判断是否为黑方棋子。
-
+local chess_pieces = {
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	200,199,201,198,202,197,203,196,204,165,171,152,154,156,158,160,
+	56,55,57,54,58,53,59,52,60,85,91,100,102,104,106,108
+}
 --将军
 local function check(chessboard, source, direc, redrun)
 	if true then
@@ -123,10 +127,36 @@ local function canmove(chessboard, source, direc)
 			end
 		end
 	--如果是卒
-	else if chessman == 21 or chessman == 22 or chessman == 37 or chessman == 38 then
-		--没有过河
-
-		--如果过河了
+	else if (chessman >= 27 and chessman <= 31) or (chessman >= 43 and chessman <= 47) then
+		--红
+		if chessman >= 27 and chessman <= 31 then 
+			--没有过河
+			if source > 16 * 8 then
+				--不是向前走
+				if source - 16 ~= direc
+					return false
+				end
+			--如果过河了
+			else
+				--不是向前、左、右走
+				if source - 16 ~= direc and source - 1 ~= direc and source + 1 ~= direc then
+					return false
+				end
+			end
+		else if chessman >= 43 and chessman <= 47
+			--没有过河
+			if source <= 16 * 8 then
+				--不是向前走
+				if source + 16 ~= direc
+					return false
+				end
+			else
+				--不是向前、左、右走
+				if source + 16 ~= direc and source - 1 ~= direc and source + 1 ~= direc then
+					return false
+				end
+			end
+		end
 	--如果是马
 	else if chessman == 21 or chessman == 22 or chessman == 37 or chessman == 38 then
 		--找到他跳的位置
@@ -192,12 +222,9 @@ local function canmove(chessboard, source, direc)
 			return false
 		end
 	end
+	return true
 end
-local chess_pieces = {
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	200,199,201,198,202,197,203,196,204,165,171,152,154,156,158,160,
-	56,55,57,54,58,53,59,52,60,85,91,100,102,104,106,108
-}
+
 function M:init(p1, p2)
 	self.red = p1
 	self.black = p2
@@ -278,7 +305,9 @@ function M:move(info, msg)
 		--return
 	end
 	--首先可不可以这么走
-
+	if true ~= canmove(self.chessboard, source, direc) then
+		return 
+	end
 	--可以这么走发送消息
 	skynet.send(self.red.agent, "lua", "send", "Table.MoveNotify", msg)
 	skynet.send(self.black.agent, "lua", "send", "Table.MoveNotify", msg)
