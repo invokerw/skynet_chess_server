@@ -23,34 +23,36 @@ local function print_chessboard(chessboard)
 		end
 	end
 end
-local horse     = {-19,-17,-11,-7, 7,11,17,19}
-local horse_leg = { -9, -9, -1, 1,-1, 1, 9, 9}
-local elephant     = {-20,-16,16,20}
-local elephant_leg = {-10, -8, 8,10}
-local scholar = {-10,-8,8,10}
-local king = {-9,-1,1,9}
+local horse     = {-33,-31,-18,-14, 14,18,31,33}
+local horse_leg = { -16, -16, -1, 1,-1, 1, 16, 16}
+local elephant     = {-34,-30,30,34}
+local elephant_leg = {-17,-15, 15,17}
+local scholar = {-17,-15,15,17}
+local king = {-16,-1,1,16}
 local in_palace = {
-	0,  0,  0,  1,  1,  1,  0,  0,  0,
-	0,  0,  0,  1,  1,  1,  0,  0,  0,
-	0,  0,  0,  1,  1,  1,  0,  0,  0,
-	0,  0,  0,  0,  0,  0,  0,  0,  0,
-	0,  0,  0,  0,  0,  0,  0,  0,  0,
-	--     楚河            汉界
-	0,  0,  0,  0,  0,  0,  0,  0,  0,
-	0,  0,  0,  0,  0,  0,  0,  0,  0,
-	0,  0,  0,  1,  1,  1,  0,  0,  0,
-	0,  0,  0,  1,  1,  1,  0,  0,  0,
-	0,  0,  0,  1,  1,  1,  0,  0,  0,	
+	-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，
+	-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，
+	-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，
+	-1，-1，-1， 0,  0,  0,  1,  1,  1,  0,  0,  0, -1，-1，-1，-1，
+	-1，-1，-1， 0,  0,  0,  1,  1,  1,  0,  0,  0, -1，-1，-1，-1，
+	-1，-1，-1， 0,  0,  0,  1,  1,  1,  0,  0,  0, -1，-1，-1，-1，
+	-1，-1，-1， 0,  0,  0,  0,  0,  0,  0,  0,  0, -1，-1，-1，-1，
+	-1，-1，-1， 0,  0,  0,  0,  0,  0,  0,  0,  0, -1，-1，-1，-1，
+				--     楚河            汉界
+	-1，-1，-1， 0,  0,  0,  0,  0,  0,  0,  0,  0, -1，-1，-1，-1，
+	-1，-1，-1， 0,  0,  0,  0,  0,  0,  0,  0,  0, -1，-1，-1，-1，
+	-1，-1，-1， 0,  0,  0,  1,  1,  1,  0,  0,  0, -1，-1，-1，-1，
+	-1，-1，-1， 0,  0,  0,  1,  1,  1,  0,  0,  0, -1，-1，-1，-1，
+	-1，-1，-1， 0,  0,  0,  1,  1,  1,  0,  0,  0,	-1，-1，-1，-1，
+	-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，
+	-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，
+	-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，-1，
 }
 --chess_pieces[48]这个扩展的棋子数组比较难以理解，实际上用了“屏蔽位”的设计，即1位表示红子(16)，1位表示黑子(32)。
 --因此0到15没有作用，16到31代表红方棋子(16代表帅，17和18代表仕，依此类推，直到27到31代表兵)，32到47代表黑方棋子(在红方基础上加16)。
 --棋盘数组中的每个元素的意义就明确了，0代表没有棋子，16到31代表红方棋子，32到47代表黑方棋子。
 --好处：它可以快速判断棋子的颜色，(Piece & 16)可以判断是否为红方棋子，(Piece & 32)可以判断是否为黑方棋子。
-local chess_pieces = {
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	86,85,87,84,88,83,89,82,90,65,71,55,57,59,61,63,
-	5,4,6,3,7,2,8,1,9,20,26,28,30,32,34,36
-}
+
 --将军
 local function check(chessboard, source, direc, redrun)
 	if true then
@@ -77,8 +79,8 @@ local function canmove(chessboard, source, direc)
 			small = source
 		end
 		--竖着走的
-		if (big - small)%9 ==0 then
-			for i=small,source,9 do
+		if (big - small)%16 ==0 then
+			for i=small,source,16 do
 				if chessboard[i] ~= 0 then
 					return false
 			end
@@ -99,7 +101,7 @@ local function canmove(chessboard, source, direc)
 		--是否是吃子 
 		local eat = false 
 		--竖着走的
-		if (big - small)%9 ==0 then
+		if (big - small)%16 ==0 then
 			for i=small,source,9 do
 				if chessboard[i] ~= 0 then
 					eat = true
@@ -191,7 +193,11 @@ local function canmove(chessboard, source, direc)
 		end
 	end
 end
-
+local chess_pieces = {
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	200,199,201,198,202,197,203,196,204,165,171,152,154,156,158,160,
+	56,55,57,54,58,53,59,52,60,85,91,100,102,104,106,108
+}
 function M:init(p1, p2)
 	self.red = p1
 	self.black = p2
@@ -250,6 +256,9 @@ function M:move(info, msg)
 	print_chessboard(self.chessboard)
 	print("source = "..source..",direc = "..direc)
 	if source == direc then
+		return
+	end
+	if self.chessboard[source] == -1 or self.chessboard[direc] == -1 then 
 		return
 	end
 	--不该他走
