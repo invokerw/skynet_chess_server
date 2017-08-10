@@ -1,6 +1,7 @@
 local skynet = require "skynet"
 local env = require "env"
 local protopack = require "protopack"
+local tb = require "handler.table"
 local M = {}
 
 M.__index = M
@@ -12,7 +13,7 @@ function M.new()
 	setmetatable(o, M)
 	return o
 end
-
+--[[
 local function print_chessboard(chessboard)
 	local s = ""
 	for i=1,#chessboard do
@@ -57,6 +58,7 @@ local chess_pieces = {
 	200,199,201,198,202,197,203,196,204,165,171,152,154,156,158,160,
 	56,55,57,54,58,53,59,52,60,85,91,100,102,104,106,108
 }
+
 --将军
 local function check(chessboard, source, direc, redrun)
 	if true then
@@ -70,7 +72,6 @@ local function checkmate(chessboard, direc)
 	end
 	return false
 end
-
 --可以这么走吗
 local function canmove(chessboard, source, direc)
 	local chessman = chessboard[source]
@@ -238,7 +239,7 @@ local function canmove(chessboard, source, direc)
 	end
 	return true
 end
-
+--]]
 function M:init(p1, p2)
 	self.red = p1
 	self.black = p2
@@ -265,6 +266,15 @@ function M:init(p1, p2)
 		-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
 		-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
 		-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
+	}
+	--chess_pieces[48]这个扩展的棋子数组比较难以理解, 实际上用了“屏蔽位”的设计, 即1位表示红子(16), 1位表示黑子(32)。
+	--因此0到15没有作用, 16到31代表红方棋子(16代表帅, 17和18代表仕, 依此类推, 直到27到31代表兵), 32到47代表黑方棋子(在红方基础上加16)。
+	--棋盘数组中的每个元素的意义就明确了，0代表没有棋子, 16到31代表红方棋子, 32到47代表黑方棋子。
+	--好处：它可以快速判断棋子的颜色, (Piece & 16)可以判断是否为红方棋子，(Piece & 32)可以判断是否为黑方棋子。
+	self.chess_pieces = {
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		200,199,201,198,202,197,203,196,204,165,171,152,154,156,158,160,
+		56,55,57,54,58,53,59,52,60,85,91,100,102,104,106,108
 	}
 	--print("self.chessboard:")
 	--print_chessboard(self.chessboard)
@@ -293,9 +303,9 @@ function M:move(info, msg)
 	local source = (msg.move.srow + 3 - 1) * 16 + msg.move.scol + 3
 	local direc = (msg.move.drow + 3 - 1) * 16 + msg.move.dcol + 3
 	local chessman = self.chessboard[source]
-	print("self.chessboard:")
-	print_chessboard(self.chessboard)
-	print("source = "..source..",direc = "..direc)
+	--print("self.chessboard:")
+	--tb.print_chessboard(self.chessboard)
+	--print("source = "..source..",direc = "..direc)
 	if source == direc then
 		return
 	end
@@ -313,7 +323,7 @@ function M:move(info, msg)
 		return
 	end
 	--首先可不可以这么走
-	if true ~= canmove(self.chessboard, source, direc) then
+	if true ~= tb.canmove(self.chessboard, source, direc) then
 		print("can't move it")
 		return 
 	end
@@ -321,7 +331,7 @@ function M:move(info, msg)
 	skynet.send(self.red.agent, "lua", "send", "Table.MoveNotify", msg)
 	skynet.send(self.black.agent, "lua", "send", "Table.MoveNotify", msg)
 	--是否赢了
-	if true == checkmate(self.chessboard, direc) then
+	if true == tb.checkmate(self.chessboard, direc) then
 		print("is red:"..self.redrun..", Win")
 		
 	end
@@ -331,7 +341,7 @@ function M:move(info, msg)
 	self.chessboard[source] = 0
 	self.chessboard[direc] = chessman
 	print("self.chessboard:")
-	print_chessboard(self.chessboard)
+	tb.print_chessboard(self.chessboard)
 
 	
 	self.redrun = not self.redrun
