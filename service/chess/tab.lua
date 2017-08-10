@@ -106,7 +106,6 @@ function M:move(info, msg)
 	skynet.send(self.black.agent, "lua", "send", "Table.MoveNotify", msg)
 	--是否赢了
 	if true == tb.checkmate(self.chessboard, direc) then
-		print("is red:"..self.redrun..", Win")
 		skynet.send(self.red.agent, "lua", "send", "Table.Winner", {isred = self.redrun})
 		skynet.send(self.black.agent, "lua", "send", "Table.Winner", {isred = self.redrun})
 	end
