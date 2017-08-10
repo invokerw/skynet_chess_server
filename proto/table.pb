@@ -1,5 +1,5 @@
 
-ò
+‹
 proto/table.protoTable"
 
 MatchReq"
@@ -28,4 +28,6 @@
 move (2.Table.Move"'
 
 MoveNotify
-move (2.Table.Move
+move (2.Table.Move"
+Winner
+isred (

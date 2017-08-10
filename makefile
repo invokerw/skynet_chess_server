@@ -9,3 +9,5 @@ proto/room.pb: proto/room.proto
 
 proto/table.pb: proto/table.proto
 	protoc --descriptor_set_out proto/table.pb proto/table.proto
+clean:
+	rm proto/*.pb

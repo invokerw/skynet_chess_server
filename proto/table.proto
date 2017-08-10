@@ -57,6 +57,6 @@ message MoveNotify
 
 message Winner
 {
-	required bool isred = 1
+	required bool isred = 1;
 }
 
