@@ -38,13 +38,13 @@ local in_palace = {
 }
 
 --将军
-local function check(chessboard, source, direc, redrun)
+function M.check(chessboard, source, direc, redrun)
 	if true then
 	end
 end
 
 --赢了
-local function checkmate(chessboard, direc)
+function M.checkmate(chessboard, direc)
 	if chessboard[direc] == 16 or chessboard[direc] == 32 then
 		return true
 	end

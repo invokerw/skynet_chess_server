@@ -186,8 +186,8 @@ local function canmove(chessboard, source, direc)
 			return false
 		end
 		--是否绊了马腿
-		if chessboard[source + horse_leg[x]] ~= 0 then
-			return false
+		if chessboard[source + horse_leg[x]] --~= 0 then
+--[[			return false
 		end
 	--如果是象
 	elseif chessman == 19 or chessman == 20 or chessman == 35 or chessman == 36 then
@@ -203,8 +203,8 @@ local function canmove(chessboard, source, direc)
 			return false
 		end
 		--是否绊了象腿
-		if chessboard[source + elephant_leg[x]] ~= 0 then
-			return false
+		if chessboard[source + elephant_leg[x]] --~= 0 then
+--[[			return false
 		end
 	--如果是士
 	elseif chessman == 17 or chessman == 18 or chessman == 33 or chessman == 34 then
