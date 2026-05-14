@@ -1,4 +1,4 @@
-# open_poker_server
+# skynet_chess_server
 
 
 
@@ -8,13 +8,13 @@
 
 数据库使用mongodb
 
-客户端代码地址: https://github.com/wfatestaynight/chess_server
+客户端代码地址: [https://github.com/invokerw/chess_server](https://github.com/invokerw/chess_client)
 
 服务器编译步骤:
 
 1、下载源码
 
-    git clone https://github.com/wfatestaynight/chess_server.git
+    git clone https://github.com/invokerw/chess_server.git
 
 2、初始化submodule
 
